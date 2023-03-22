@@ -18,3 +18,12 @@ for (let i =0; i <items.length; i++){
     items[i].style.fontWeight='bold';
 }
 
+
+//GETELEMENTSBYTAG
+let li= document.getElementsByTagName('li');
+console.log(li);
+
+for (let i=0;i<li.length;i++){
+    li[i].style.backgroundColor="darkgrey";
+}
+
