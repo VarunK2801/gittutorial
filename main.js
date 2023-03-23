@@ -73,18 +73,28 @@ function removeItem(e){
 //funtion filter items
 
 function filterItems(e){
-    //converts text to lowercase
-    let text =e.target.value.toLowerCase();
-    // Get lis
-    let items = itemList.getElementsByTagName('li');
-    // convert to array
-    Array.from(items).forEach(function(item){ 
-        var  itemName = item.firstChild.textContent;
-        if(itemName.toLowerCase().indexOf(text) != -1){
-            item.style.display = 'block';
-        }else{
-            item.style.display = 'none';
-        }
-    });
-}
 
+    //convert text to lowercase
+    let text = e.target.value.toLowerCase();
+
+    //Get list
+    let items = itemList.getElementsByTagName("li");
+    console.log(items)
+
+    //convert to an array
+    Array.from(items).forEach(function(item){
+
+        let itemName = item.firstChild.textContent;
+
+        let description = item.childNodes[1].textContent
+
+        if(itemName.toLowerCase().indexOf(text) != -1 || description.toLowerCase().indexOf(text) != -1){
+            item.style.display = "block";
+        }
+        else{
+            item.style.display = "none";
+        }
+
+    });
+
+}
