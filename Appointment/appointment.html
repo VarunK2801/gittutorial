@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Book Appointment</title>
+</head>
+<body>
+    <div class="outer">
+        <h1>Book Appointment</h1>
+        <p>You will receive text regarding date and time. </p>
+        <hr>
+        <form onsubmit="submitHandler(event)" >
+            <p id="error"></p>
+            <label for="name">Name:</label> 
+            <input type="text" name="name" id="name">
+            <label for="Email">E-Mail:</label>
+            <input type="email" name="email" id="email">
+            <label for="Phone">Phone:</label>
+            <input type="number" name="number" id="number">
+            <!--<label for="time">Time for the call:</label><br>
+            <input class="date"type="date" value="2022-03-15" />
+            <input class="date"type="time" value="14:35">-->
+            <button type="submit" id="btn">Submit</button>
+        </form>
+    </div>
+    <script src="appointment.js">  
+    </script>
+    
+    
+    
+</body>
+</html>
