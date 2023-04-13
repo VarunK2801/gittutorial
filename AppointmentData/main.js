@@ -24,10 +24,24 @@ function saveToLocalStorage(event) {
             console.log(error);   
         })
 
-
+    showNewUserOnScreen(obj);
     
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+    axios.get("https://crudcrud.com/api/9a308f5019bf4607859368db73e5ae6a/appiontmentData")
+        .then((response) => {
+            console.log(response);
+
+            for (var i=0; i<response.data.length; i++) {
+                showNewUserOnScreen(response.data[i]);
+            }
+        })
+
+        .catch((error) => {
+            console.log(error);
+        })
+})
 
 
 function showNewUserOnScreen (user) {
