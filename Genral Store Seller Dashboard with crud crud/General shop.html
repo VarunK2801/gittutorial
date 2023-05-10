@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shop</title>
+    <style>
+        body {
+        background-image: url("shop.jpg");
+        background-size: cover;
+        }
+
+        #outer {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(0,0,0,.5);
+        color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #mainheader {   
+        text-align: center;
+        margin-bottom: 30px;
+        }
+
+        #main-title {
+        font-size: 50px;
+        color: white;
+        }
+
+        #sub-title {
+        font-size: 24px;
+        color: white;
+        }
+
+        form {
+        display: flex;
+        flex-direction: column;
+        }
+
+        label {
+        margin-bottom: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: blue;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        }
+
+        ul {
+        
+        margin: 0;
+        padding: 0;
+        }
+
+        li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: bold;
+        }
+
+        #buy1{
+        background-color: green;
+        }
+
+        #buy2 {
+        background-color: yellow;
+        }
+
+        #buy3 {
+        background-color: red;  
+        }
+
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <header id="main-header">
+            <h1 id="main-title">Trimurti General Store</h1>
+            <h3 id="sub-title">All in One Store</h3>
+        </header>
+        <form onsubmit="submitHandler(event)" >
+            <label for="" id="itemname">Item Name:</label>
+            <input type="text" id="Item-Name" placeholder="eg.cadbury">
+            <label id="itemdescription">Item Description:</label>
+            <input type="text" id="Item-Description" placeholder="eg. chocolate">
+            <label for="" id="itemprice">Item Price:</label>
+            <input type="number" id="Item-Price" placeholder="eg.20 Rs">
+            <label for="" id="itemquantity">Quantity:</label>
+            <input type="number" id="Item-Quantity" placeholder="eg. 100">
+            <button  id="btn"> Submit </button>
+        </form>
+        <ul id="list-of-users">
+
+        </ul>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        const url="https://crudcrud.com/api/6d7143c30fa046ffb6ca314cac96d730";
+
+        function submitHandler(event){
+            event.preventDefault();
+            const itemName = document.getElementById('Item-Name').value;
+            const itemDescription = document.getElementById('Item-Description').value;
+            const itemPrice = document.getElementById('Item-Price').value;
+            const itemQuantity = document.getElementById('Item-Quantity').value;
+
+            const obj ={
+                itemName,
+                itemDescription,
+                itemPrice,
+                itemQuantity
+            }
+
+            async function postDetails(){
+                try{
+                    const response = await axios.post(`${url}/generalStore`,obj);
+                    showOnScreen(response.data);
+                }
+                catch(err){  
+                    console.log(err)
+                }
+            }
+            postDetails()
+        }
+
+        window.addEventListener("DOMContentLoaded",() =>{
+            async function getDetails(){
+                try{
+                    const response = await axios.get(`${url}/generalStore`)
+                    for (var i =0; i < response.data.length ; i++){
+                        showOnScreen(response.data[i])
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            getDetails()
+        })
+
+        function showOnScreen(user){
+            const parentNode = document.getElementById('list-of-users');
+            const childElement = `<li id=${user._id}> ${user.itemName} => ${user.itemDescription} => ${user.itemPrice} Rs=> ${user.itemQuantity}
+                <button onclick = buyOne('${user._id}','${user.itemName}','${user.itemDescription}','${user.itemPrice}','${user.itemQuantity}') id="buy1"> BuY 1 </button>
+                <button onclick = buyTwo('${user._id}','${user.itemName}','${user.itemDescription}','${user.itemPrice}','${user.itemQuantity}') id="buy2"> BuY 2 </button>
+                <button onclick = buyThree('${user._id}','${user.itemName}','${user.itemDescription}','${user.itemPrice}','${user.itemQuantity}') id="buy3"> BuY 3 </button>
+                </li>`
+            parentNode.innerHTML = parentNode.innerHTML + childElement;
+            document.getElementById("Item-Name").value = "";
+            document.getElementById("Item-Description").value = "";
+            document.getElementById("Item-Price").value = "";
+            document.getElementById("Item-Quantity").value = "";
+
+        }
+
+        function showQuantity(userId,name,description,price, newQuantity){
+            async function updateDetails(){
+                try{
+                    const response = await axios.put(`${url}/generalStore/${userId}`,{
+                        "itemName" : name,
+                        "itemDescription" : description,
+                        "itemPrice" : price,
+                        "itemQuantity" : newQuantity
+                    })
+                
+                    async function getDetails(){
+                                try{
+                                    const response = await axios.get(`${url}/generalStore/${userId}`)
+                                    console.log(response,"update Quantity")
+                                    showOnScreen(response.data)
+                                }
+                                catch(err){
+                                    console.log(err);
+                                }
+                            }
+                    getDetails()
+                }
+                catch(err){
+                    console.log(err);   
+                }
+            }
+            updateDetails()
+        }
+
+
+        function buyOne(userId,name,description,price,quantity){
+            if(quantity <=1){
+                alert("0 item left");
+                deleteFromScreen(userId);
+                return;
+            }
+            quantity -=1;
+            const parent = document.getElementById('list-of-users');
+            const element = document.getElementById(userId);
+            parent.removeChild(element);
+            showQuantity (userId,name,description,price,quantity);
+        }
+
+        function buyTwo(userId,name,description,price,quantity){
+            if(quantity <2){
+                alert("Less than 2 items Left");
+                // deleteFromScreen(userId);
+                return;
+            }else if (quantity ===2){
+                deleteFromScreen(userId)
+                return;
+            }
+            quantity -=2;
+            const parent = document.getElementById('list-of-users');
+            const element = document.getElementById(userId);
+            parent.removeChild(element);
+            showQuantity (userId,name,description,price,quantity);
+        }
+        function buyThree(userId,name,description,price,quantity){
+            if(quantity < 3){
+                alert("Less than 3 items Left");
+                //deleteFromScreen(userId);
+                return;
+            }
+            quantity -=3;
+            const parent = document.getElementById('list-of-users');
+            const element = document.getElementById(userId);
+            parent.removeChild(element);
+            showQuantity (userId,name,description,price,quantity);
+        }
+
+    
+        function deleteFromScreen(userId){
+            const parentNode = document.getElementById('list-of-users');
+            const childToBeDeleted = document.getElementById(userId);
+
+            parentNode.removeChild(childToBeDeleted);
+
+            async function deleteUser(){
+                try{
+                    const response = await axios.delete(`${url}/generalStore/${userId}`)
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            deleteUser()
+        }
+
+    </script>
+</body>
+</html>
