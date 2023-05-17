@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        body{
+            background-color: #f2f2f2;
+        }
+        #outer{
+            
+            border: 1px solid olive;
+            padding: 20px;
+            margin: auto;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            display:block;
+            width: 50%; 
+        }
+        
+        hr{
+            color:black;
+            width: 100;
+        }
+
+        #main-title{
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #para1{
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"]{
+            width:100%;
+            padding: 10px;
+            border-top: 0px solid black;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        #btn{
+            background-color: #4CAF50;
+            text-align: center;
+            border:none;
+            padding: 12px 10px;
+            text-decoration: none;
+            display: block;
+            margin:auto;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor:pointer;
+            margin-top: 20px;
+            color:white;
+            width: 100%;
+        }
+
+        #btn:hover {    
+            background-color: #3e8e41;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <header id="header">
+            <h1 id="main-title">Registration form</h1>
+            <p id="para1">To book an appointment fill the form</p>
+            <hr>
+        </header>
+        <form onsubmit="SubmitHandler(event)">
+            <label class="ip">User Name:</label>
+            <input type="text" id="User-Name" placeholder="Enter your username">
+            <label  class="ip">Email id:</label>
+            <input type="email" id="Email-id" placeholder="Enter the mail id">
+            <label  class="ip">Phone:</label>
+            <input type="number" id="Number" placeholder="Enter the number">
+            <button id="btn">Submit</button>
+        </form>
+        <ul id="list-of-users">
+
+        </ul>        
+
+        <script>
+            function SubmitHandler(event){
+                event.preventDefault()
+                const Name = document.getElementById('User-Name').value;
+                const Email = document.getElementById('Email-id').value;
+                const Number = document.getElementById('Number').value;
+
+                const obj = {Name,Email,Number};
+
+                localStorage.setItem(obj.Email,JSON.stringify(obj));
+                showOnScreen(obj);
+            }
+
+            function showOnScreen(user){
+                const parentNode = document.getElementById('list-of-users');
+                const childElement = `<li id=${user.Email}> ${user.Email} - ${user.Name} - ${user.Number}
+                    <button onclick=deleteUser('${user.Email}') id='dbtn'> Delete User </button>
+                    <button onclick=editUser('${user.Email}','${user.Name}','${user.Number}') id='ebtn'> Edit user </button>
+                    </li>`
+
+                parentNode.innerHTML = parentNode.innerHTML + childElement;
+                document.getElementById('User-Name').value='';
+                document.getElementById('Email-id').value ='';
+                document.getElementById('Number').value= '';    
+            }
+
+            function deleteUser(Email){
+                localStorage.removeItem(Email);
+                removeFromScreen(Email)
+                
+            }
+
+            function removeFromScreen(Email){
+              const parentNode = document.getElementById('list-of-users');
+              const childToBeDeleted = document.getElementById(Email);
+
+                // if(childToBeDeleted){
+                //     parentNode.removeChild(childToBeDeleted);
+                // }
+                parentNode.removeChild(childToBeDeleted);
+            }
+        </script>
+    </div>
+</body>
+</html>

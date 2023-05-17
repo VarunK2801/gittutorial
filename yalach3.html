@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <div id="outer-class">
+        <header id="main-header">
+            <h1 id="main-title">Registration form</h1>
+            <h4 id="sub-title">Make a call</h4>
+        </header>
+
+        <form onsubmit="submitHandler(event)">
+            <label  id="username">User Name:</label>
+            <input type="text" id="User-Name" placeholder="enter the name">
+            <label  id="email">Email Id:</label>
+            <input type="email" id="Email-Id" placeholder="enter the mail">
+            <label  id="phone">Mob no:</label>
+            <input type="number" id="Phone-No" placeholder="enter the number">
+            <button id="btn">SUBMIT</button>
+        </form>
+        <ul id="list-of-users"> 
+
+        </ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        function submitHandler(event){
+            event.preventDefault();
+            const Name = document.getElementById('User-Name').value;
+            const Email = document.getElementById('Email-Id').value;
+            const Number = document.getElementById('Phone-No').value;
+
+            const obj ={
+                Name ,
+                Email,
+                Number
+            }
+            axios.post("https://crudcrud.com/api/5ae7621eb3cb493c832dc4925a67c716/apData",obj)
+                .then((response) =>{
+                    showUserOnScreen(response.data);
+
+                })
+                .catch((error) =>{
+                    console.log(error);
+                })
+        }
+
+        window.addEventListener("DOMContentLoaded",()=>{
+            axios.get("https://crudcrud.com/api/5ae7621eb3cb493c832dc4925a67c716/apData")
+                .then((response) =>{
+
+                    for (var i = 0; i < response.data.length ; i++){
+                        showUserOnScreen(response.data[i]);
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+        })
+
+        function showUserOnScreen(user){
+            const parentNode = document.getElementById("list-of-users");
+            const childElement = `<li id= ${user._id}> ${user.Email} - ${user.Name} - ${user.Number}
+                <button onclick= deleteUser('${user._id}') id="dbtn"> Delete User </button>
+                <button onclick= editUser('${user.Email}','${user.Name}','${user.Number}','${user._id}') id="ebtn"> Edit User </button> </li>`
+            
+            parentNode.innerHTML = parentNode.innerHTML + childElement
+
+            document.getElementById("User-Name").value ="";
+            document.getElementById("Email-Id").value ="";
+            document.getElementById("Phone-No").value ="";
+
+        }
+
+        function deleteUser(userId){
+            axios.delete(`https://crudcrud.com/api/5ae7621eb3cb493c832dc4925a67c716/apData/${userId}`)
+                .then((response) =>{
+                    removeUserFromScreen(userId);
+                })
+                .catch((err) =>{
+                    console.log(err);
+                })
+        }
+
+        function removeUserFromScreen(userId){
+            const parentNode = document.getElementById("list-of-users");
+            const childToBeDeleted = document.getElementById(userId);
+
+            parentNode.removeChild(childToBeDeleted);
+        }
+
+        function editUser(Email,Name,Number,userId){
+            document.getElementById('Email-Id').value = Email;
+            document.getElementById('User-Name').value = Name;
+            document.getElementById('Phone-No').value = Number;
+
+            deleteUser(userId);
+        }   
+
+   
+
+    </script>
+</body>
+</html>

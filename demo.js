@@ -121,7 +121,7 @@ container.insertBefore(newDiv,  h1);
 
 //get the element by queryselector 
 
-let a = document.getElementById("items");
+let a = document.getElementById("items1");
 
 let b = document.createElement("li");
 b.textContent = "Hello World";

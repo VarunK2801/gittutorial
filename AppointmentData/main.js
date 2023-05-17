@@ -13,7 +13,7 @@ function saveToLocalStorage(event) {
     }
 
 
-    axios.post("https://crudcrud.com/api/9a308f5019bf4607859368db73e5ae6a/appiontmentData", obj)
+    axios.post("https://crudcrud.com/api/15daa67217494c6c90ef94b20ae64613/appiontmentData", obj)
         .then((response) => {
             
             showNewUserOnScreen(response.data); 
@@ -24,12 +24,12 @@ function saveToLocalStorage(event) {
             console.log(error);   
         })
 
-    showNewUserOnScreen(obj);
-    
+    // showNewUserOnScreen(obj);
+        
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/9a308f5019bf4607859368db73e5ae6a/appiontmentData")
+    axios.get("https://crudcrud.com/api/15daa67217494c6c90ef94b20ae64613/appiontmentData")
         .then((response) => {
             console.log(response);
 
@@ -61,7 +61,7 @@ function showNewUserOnScreen (user) {
 }
 
 function deleteUser(userId){
-    axios.delete(`https://crudcrud.com/api/9a308f5019bf4607859368db73e5ae6a/appiontmentData/${userId}`)
+    axios.delete(`https://crudcrud.com/api/15daa67217494c6c90ef94b20ae64613/appiontmentData/${userId}`)
         .then((response) => {
             removeUserFromScreen(userId)
         })

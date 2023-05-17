@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Expenses Chart</h1>
+        
+        <form id="myFirst">
+            <label for="inputAmount"> Choose Expence Amt:</label>
+            <input type="text" id="inputExpenses" class="form-control" > <br> <br>
+            <label for="inputDescription">Choose Description:</label>
+            <input type="text" id="inputExpenses" class="form-control" > <br> <br>
+            <label for="inputCategory">Choose a Category:</label>
+            <select id="inputExpenses" class="form-select">
+                <option selected>Choose...</option>
+                <option value="1">Fuel</option>
+                <option value="2">Electricity</option>
+                <option value="3">Food</option>
+                <option value="4">Movies</option>
+            </select> <br> <br> 
+            <br> <br>
+            <button>add expense</button>
+        </form>
+        <ul id="items" class="list-group">
+            <li class="list-group-item">add<button class="btn btn-danger btn-sm float-right delete">Delete Expenses</button></li>
+        </ul>
+    
+    
+        </div> 
+
+<script>
+    var form = document.getElementById('inputExpenses');
+    var itemList = document.getElementById('items');
+
+    //submit event
+    form.addEventListener('submit',addItem);
+
+    //add item
+    function addItem(e){
+        e.preventDefault();
+
+        //get input value
+        var newItem = document.getElementById('inputExpenses').value;
+
+        //create new li element
+        var li = document.createElement('li');
+        //add text node with input value
+        li.appendChild(document.createTextNode(newItem));
+
+        itemList.appendChild(li);
+    }
+
+</script>
+</body>
+</html>

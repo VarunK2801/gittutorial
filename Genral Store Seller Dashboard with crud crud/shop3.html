@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+        background-image: url("shop.jpg");
+        background-size: cover;
+        }
+
+        #outer {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #mainheader {   
+        text-align: center;
+        margin-bottom: 30px;
+        }
+
+        #main-title {
+        font-size: 50px;
+        color: #333;
+        }
+
+        #sub-title {
+        font-size: 24px;
+        color: #555;
+        }
+
+        form {
+        display: flex;
+        flex-direction: column;
+        }
+
+        label {
+        margin-bottom: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        }
+
+        li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: bold;
+        }
+
+        button:nth-child(1) {
+        background-color: #28a745;
+        }
+
+        button:nth-child(2) {
+        background-color: #ffc107;
+        }
+
+        button:nth-child(3) {
+        background-color: #dc3545;
+        }
+
+        @media (max-width: 600px) {
+        #outer {
+            padding: 10px;
+        }
+
+        #main-title {
+            font-size: 36px;
+        }
+
+        #sub-title {
+            font-size: 18px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            font-size: 16px;
+        }
+
+        button {
+            font-size: 16px;
+        }
+
+        li {
+            font-size: 14px;
+        }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <header id="mainheader">
+            <h1 id="main-title">Shoping</h1>
+            <h4 id="sub-title">go on</h4>
+        </header>
+        <form onsubmit="submitHandler(event)">
+            <label id="itemname">Item Name:</label>
+            <input type="text" id="Item-Name" placeholder="Add Item">
+            <label id="description">Description:</label>
+            <input type="text" id="Description" placeholder="Desc">
+            <label id="price">Price:</label>
+            <input type="number" id="Price" placeholder="Eg. 20">
+            <label for="" id="quantity">Quantity</label>
+            <input type="number" id="Quantity" placeholder="eg. 100">
+            <button id="btn">Add item</button>
+
+        </form>
+        <ul id="list-of-users">
+
+        </ul>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        const url = "https://crudcrud.com/api/1b0b4e4cf12b48b0954923c1b750b27c";
+
+        function submitHandler(event){
+            event.preventDefault();
+            const itemName = document.getElementById("Item-Name").value;
+            const itemDescription = document.getElementById("Description").value;
+            const itemPrice = document.getElementById("Price").value;
+            const itemQuantity = document.getElementById("Quantity").value;
+
+
+            const obj ={
+                itemName,
+                itemDescription,
+                itemPrice,
+                itemQuantity
+            }
+            async function postDetails(){
+                try{ 
+                    const response = await axios.post(`${url}/onlineShop`,obj)
+                    showOnTheScreen(response.data);
+                                
+                }
+                catch(error){
+                    console.log(error);
+                }
+            }
+            postDetails()
+        }
+
+        window.addEventListener("DOMContentLoaded",()=>{
+            async function getDetails(){
+                try{
+                const response = await axios.get(`${url}/onlineShop`)
+                 for (var i =0 ; i < response.data.length ; i++){
+                        showOnTheScreen(response.data[i]);
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            getDetails();
+        })
+
+        function showOnTheScreen(item){
+            const parentNode = document.getElementById("list-of-users");
+            const childElement = `<li id=${item._id}> ${item.itemName} - ${item.itemDescription} - ${item.itemPrice} Rs. - ${item.itemQuantity}
+                <button onclick= buyOne('${item._id}','${item.itemName}','${item.itemDescription}','${item.itemPrice}','${item.itemQuantity}')>BUY 1 </button>
+                <button onclick= buyTwo('${item._id}','${item.itemName}','${item.itemDescription}','${item.itemPrice}','${item.itemQuantity}')>BUY 2 </button>
+                <button onclick= buyThree('${item._id}','${item.itemName}','${item.itemDescription}','${item.itemPrice}','${item.itemQuantity}')>BUY 3 </button>
+                </li>`
+
+            parentNode.innerHTML = parentNode.innerHTML +childElement;
+            document.getElementById("Item-Name").value="";
+            document.getElementById("Description").value ="";
+            document.getElementById("Price").value ="";
+            document.getElementById("Quantity").value ="";
+
+
+        }
+
+        function showQuantity(itemId,name,description,price,newQuantity){
+            async function updateDetails(){
+                try{
+                    const response = await axios.put(`${url}/onlineShop/${itemId}`,{
+                        "itemName" : name,
+                        "itemDescription" : description,
+                        "itemPrice" : price,
+                        "itemQuantity" : newQuantity
+                    })
+                    
+                    async function getDetails(){
+                        try{
+                        const response = await axios.get(`${url}/onlineShop/${itemId}`)
+                        
+                        console.log(response,"inshowQuantity");
+                        showOnTheScreen(response.data);
+                        }
+                        catch(err){
+                            console.log(err);
+                        }
+                    }
+                    getDetails()
+                }
+                catch(err){
+                    console.log(err);
+                }
+
+            }
+            updateDetails()
+
+        }
+
+        function buyOne(itemId,name,description,price,quantity){
+            if (quantity ==1){
+                // alert("0 ITEMS LEFT");
+                deleteFromScreen(itemId)
+                return ;
+            }
+            quantity -=1;
+            const element =document.getElementById(itemId);
+            const parent = document.getElementById("list-of-users");
+            parent.removeChild(element);
+            showQuantity(itemId,name,description,price,quantity);
+        }
+
+        function buyTwo(itemId,name,description,price,quantity){
+            if (quantity ==2){
+                // alert("Less than 2 quantity available");
+                deleteFromScreen(itemId)
+                return;
+            }else if(quantity <2){
+                alert('less than 2');
+            }
+            quantity -=2;
+            const element =document.getElementById(itemId);
+            const parent = document.getElementById("list-of-users");
+            parent.removeChild(element);
+            showQuantity(itemId,name,description,price,quantity);
+        }
+
+        function buyThree(itemId,name,description,price,quantity){
+            if (quantity ==3){
+                // alert("Less than 3 quantity available");
+                deleteFromScreen(itemId)    
+                return;
+
+            }
+            quantity -=3;
+            const element =document.getElementById(itemId);
+            const parent = document.getElementById("list-of-users");
+            parent.removeChild(element);
+            showQuantity(itemId,name,description,price,quantity);
+        }
+        
+        function deleteFromScreen(itemId){
+            const parentNode = document.getElementById("list-of-users");
+            const childToBeDeleted = document.getElementById(itemId);
+
+            parentNode.removeChild(childToBeDeleted);
+
+            async function deleteUser(){
+                try{
+                const response = await axios.delete(`${url}/onlineShop/${itemId}`)
+        
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            deleteUser()
+        }
+    </script>
+</body>
+</html>

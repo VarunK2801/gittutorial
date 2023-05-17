@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="outer">
+        <header id="main-header">
+            <h1 id="main-title">Candy Shop</h1>
+        </header>
+        <form onsubmit="submitHandler(event)">
+            <label for="" id="candyname">Candy Name:</label>
+            <input type="text" id="Candy-Name" placeholder="enter the candy name">
+            <label for="" id="description">Description:</label>
+            <input type="text" id="Description" placeholder="description of candy">
+            <label for="" id="price">Price</label>
+            <input type="number" id="Price" placeholder="Price">
+            <button id="btn">Add item</button>
+        
+            <ul id="list-of-candy">
+
+            </ul>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+
+        const url = "https://crudcrud.com/api/a3b1527fd82c4cef8eeca71799102726";
+
+        function submitHandler(event){
+            event.preventDefault();
+            const itemName = document.getElementById('Candy-Name').value;
+            const itemDescription = document.getElementById('Description').value;
+            const itemPrice = document.getElementById('Price').value;
+
+            const obj ={
+                itemName,
+                itemDescription,
+                itemPrice
+            }
+
+            async function postDetails(){
+                try{
+                    const response = await axios.post(`${url}/candyShop`,obj)
+                    showOnScreen(response.data);
+                }
+                catch(err){
+                    console.log(err)
+                }
+            }
+            postDetails()
+        }
+
+        function showOnScreen(user){
+            const parentNode = document.getElementById('list-of-items');
+            const childElement = `<li id=${user._id}> ${user.itemName} => ${user.itemDescription} => ${user.itemPrice}
+                    
+        }
+    </script>
+</body>
+</html>
