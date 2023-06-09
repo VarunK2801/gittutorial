@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+</head>
+<body>
+    <div id="order">
+    <header>Order </header>
+    <hr style="color:Red;border: 2px solid red;width:40%;align-self: center;margin-top: 1px;">
+        <label for="">Dish&nbsp;&nbsp;:
+            <select name="" id="dish">
+                <option value="Chicken Briyani">Chicken Briyani</option><hr>
+                <option value="Mutton Briyani">Mutton Briyani</option><hr>
+                <option value="Tandori Briyani">Tandori Briyani</option>
+            </select>
+        </label>
+        <label for="">Price :
+            <input type="number" id="price">
+        </label>
+        <label for="">Table :
+           <select name="" id="table">
+            <option value="table1">Table1</option><hr>
+            <option value="table2">Table2</option><hr>
+            <option value="table3">Table3</option>
+           </select>
+        </label>
+        <input id="btn" type="button" value="Add Order" onclick="savetoCrudCrud(event)">
+    </div>
+    <hr>
+    <br>
+        <ul id="table1">Table 1 :</ul><br>
+        <ul id="table2">Table 2 :</ul><br>
+        <ul id="table3">Table 3 :</ul>
+
+
+    </ul>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <script>
+
+        function savetoCrudCrud(event){
+    event.preventDefault()
+    const dish = document.getElementById('dish').value
+    const price= document.getElementById('price').value
+    const table= document.getElementById('table').value
+
+
+    const order={dish,price,table}
+    axios.post('https://crudcrud.com/api/e7b6cf678acf4da4883888ea3d19f008/order',order)
+    .then((res)=>{
+       console.log(res.data,"afterposting")
+       onscreen(res.data);
+    })
+    .catch((err)=>{document.body.innerHTML=document.body.innerHTML + `<h4>Something Went Wrong in post</h4>`})
+    // onscreen(order);
+}
+
+
+window.addEventListener('DOMContentLoaded',()=>{
+    axios.get('https://crudcrud.com/api/e7b6cf678acf4da4883888ea3d19f008/order')
+    .then((res)=>{
+        for(var i=0;i<res.data.length;i++){
+            onscreen(res.data[i])
+        }
+    })
+    .catch((err)=>{document.body.innerHTML=document.body.innerHTML + `<h4>Something Went Wrong in window</h4>`})
+})
+
+
+function onscreen(order){
+    document.getElementById('dish').value=''
+    document.getElementById('price').value=''
+     
+
+    const parent1=document.getElementById('table1')
+    const parent2=document.getElementById('table2')
+    const parent3=document.getElementById('table3')
+
+    const child=`<li id=${order._id}>${order.table} ---> ${order.dish} ---> ${order.price}
+    
+                <button id='btn2' onclick=Delete('${order._id}','${order.table}')>Delete</button></li>`
+
+    if(order.table ==='table1'){
+        parent1.innerHTML = parent1.innerHTML + child
+    }
+    else if(order.table ==='table2'){
+        parent2.innerHTML = parent2.innerHTML + child
+    }
+    else if(order.table ==='table3'){
+        parent3.innerHTML = parent3.innerHTML + child
+    }
+} 
+
+function Delete(id,table){
+    console.log(id)
+    console.log(table)
+    const data=axios.delete(`https://crudcrud.com/api/e7b6cf678acf4da4883888ea3d19f008/order/${id}`)
+    .then((res)=>{
+           removeFromScreen(id,table)
+    })
+    .catch((err)=>{document.body.innerHTML=document.body.innerHTML + `<h4>Something Went Wrong</h4>`})
+    }
+
+function removeFromScreen(id,table){
+    const parent1=document.getElementById('table1')
+    const parent2=document.getElementById('table2')
+    const parent3=document.getElementById('table3')
+    const child=document.getElementById(id)
+
+    if(child){
+        if(table==='table1'){
+            parent1.removeChild(child)
+        }
+        if(table==='table2'){
+            parent2.removeChild(child)
+        }
+        if(table==='table3'){
+            parent3.removeChild(child)
+        }
+    }
+}
+    </script>
+</body>
+<style>
+
+    #order{height:auto;width:350px;margin: 10px 30% 10px 30%;display: flex;flex-direction: column;border: 2px solid black;background-color: aqua;font-weight: 600;border-radius: 10px;margin-bottom: 20px;margin-top: 20px;}
+    label{margin: 5px;margin-left: 40px;}
+    header{text-align: center;font-size: 30px;color: red;}
+    input{margin:3px;padding: 2px;width:200px}
+    select{margin:3px;padding: 4px;width:207px;border-bottom: 1px solid black;}
+    #btn{margin:10px;padding: 4px;width:207px;align-self: center;color:white;background-color: black;font-weight: 600;}
+    ul{font-size: 15px;font-weight: 550;margin: 5px;}
+    li{font-size: 15px;font-weight: 500;list-style-type: none;}
+    #btn2{margin:5px;padding: 4px;width:auto;align-self: center;color:white;background-color: black;}
+
+</style>
+</html>
